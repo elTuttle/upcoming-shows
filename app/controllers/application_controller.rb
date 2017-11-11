@@ -30,6 +30,11 @@ class ApplicationController < Sinatra::Base
     erb :'events/events'
   end
 
+  get '/events' do
+    @session = session
+    erb :'events/create_event'
+  end
+
   post '/signup' do
     if params[:username] == ""||params[:email] == ""||params[:password] == ""
       redirect to '/signup'
@@ -52,6 +57,10 @@ class ApplicationController < Sinatra::Base
         redirect to '/login'
       end
     end
+  end
+
+  post '/events' do
+    "#{params}"
   end
 
 end
