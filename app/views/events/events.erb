@@ -1,0 +1,13 @@
+<%if Helpers.is_logged_in?(@session)%>
+  <h1>Welcome, <%=@user.username%></h1>
+  <%Event.all.each do |event|%>
+    <h2><%=event.name%></h2>
+    <h4><%=event.city%>, <%=event.state%></h4>
+    <p><%=event.description%></p>
+    <p><%=event.time_of_event%></p>
+    <p><%=event.user.username%></p>
+  <%end%>
+  <a href='/logout'>Log Out</a>
+<%else%>
+  <%redirect to '/login'%>
+<%end%>

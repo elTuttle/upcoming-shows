@@ -1,0 +1,7 @@
+<%if !Helpers.is_logged_in?(@session)%>
+  <h1>Welcome to Fwitter</h1>
+  <a href="/signup">Sign Up</a>
+  <a href="/login">Log In</a>
+<%else%>
+  <%redirect to '/events'%>
+<%end%>
