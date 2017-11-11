@@ -60,7 +60,14 @@ class ApplicationController < Sinatra::Base
   end
 
   post '/events' do
-    "#{params}"
+    if params[:name] == ""||params[:city] == ""||params[:state] == ""||params[:description] == ""||params[:date] == ""||params[:time] == ""
+      redirect to '/events/new'
+    else
+      user = User.find_by(id: session[:user_id])
+      event = Event.create(params)
+      event.update(user: user)
+      redirect to '/events'
+    end
   end
 
 end
