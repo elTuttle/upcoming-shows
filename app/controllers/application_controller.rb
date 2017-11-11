@@ -30,7 +30,7 @@ class ApplicationController < Sinatra::Base
     erb :'events/events'
   end
 
-  get '/events' do
+  get '/events/new' do
     @session = session
     erb :'events/create_event'
   end
