@@ -1,5 +1,11 @@
 <h1><%=@user.username%></h1>
-<%@user.tweets.all.each do |tweet|%>
-  <p><%=tweet.content%></p>
+<br></br>
+<%@user.events.all.each do |event|%>
+  <h2><a href="/events/<%=event.id%>"><%=event.name%></a></h2>
+  <h4><%=event.city%>, <%=event.state%></h4>
+  <p><%=event.description%></p>
+  <p><%=event.date%> <%=event.time%></p>
   <br></br>
 <%end%>
+<a href="/events">home</a>
+<a href="/events/new">create new event</a>
