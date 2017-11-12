@@ -84,9 +84,32 @@ class ApplicationController < Sinatra::Base
 
   get '/events/:city/:state' do
     @events = []
-    Event.all.each do |event|
 
+    city = params[:city].split("-")
+    city.each do |c|
+      if c == "-"
+        c = ""
+      end
+      c.capitalize!
     end
+    @city = city.join(" ")
+
+    state = params[:state].split("-")
+    state.each do |s|
+      if s == "-"
+        s = ""
+      end
+      s.capitalize!
+    end
+    @state = state.join(" ")
+
+    @session = session
+    Event.all.each do |event|
+      if event.city_slug == params[:city] && event.state_slug == params[:state]
+        @events << event
+      end
+    end
+    erb :'/events/local_events'
   end
 
   post '/signup' do

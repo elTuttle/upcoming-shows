@@ -1,6 +1,6 @@
 <%if Helpers.is_logged_in?(@session)%>
   <%currentdate = DateTime.now%>
-  <h1>Welcome, <%=@user.username%></h1>
+  <h1><%=@city%>, <%=@state%></h1>
   <a href="/events/new">create new event</a>
   <p>Search for nearby shows</p>
   <form action="/events/search" method="post">
@@ -62,7 +62,7 @@
   </form>
   <br>
   <br>
-  <%Event.all.each do |event|%>
+  <%@events.each do |event|%>
     <% if currentdate.to_s < event.date%>
       <h2><a href="/events/<%=event.id%>"><%=event.name%></a></h2>
       <h4><%=event.city%>, <%=event.state%></h4>
