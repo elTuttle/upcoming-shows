@@ -1,4 +1,5 @@
 require './config/environment'
+require "rack/flash"
 
 class ApplicationController < Sinatra::Base
 
@@ -37,6 +38,7 @@ class ApplicationController < Sinatra::Base
 
   get '/logout' do
     session.clear
+    flash[:message] = "Logged Out"
     redirect '/login'
   end
 
@@ -58,9 +60,11 @@ class ApplicationController < Sinatra::Base
       user = User.find_by(id: session[:user_id])
       if user.id == event.user.id
         event.destroy
+        flash[:message] = "Event Deleted"
         redirect to "/events"
       else
-        "Can't delete someone else's tweet"
+        flash[:message] = "Can't Delete Someone Else's Event"
+        redirect to "/events/#{event.id}"
       end
     else
       redirect to '/login'
@@ -75,7 +79,8 @@ class ApplicationController < Sinatra::Base
       if @user.id == @event.user.id
         erb :'events/edit_event'
       else
-        "Can't edit someone else's event"
+        flash[:message] = "Can't edit someone else's event"
+        redirect to "/events/#{event.id}"
       end
     else
       redirect to '/login'
