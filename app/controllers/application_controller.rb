@@ -1,13 +1,15 @@
 require './config/environment'
-require "rack/flash"
+require 'sinatra/base'
+require 'sinatra/flash'
 
 class ApplicationController < Sinatra::Base
 
   configure do
     set :public_folder, 'public'
     set :views, 'app/views'
-    enable :sessions
     set :session_secret, "secret"
+    enable :sessions
+    register Sinatra::Flash
   end
 
   get '/' do
@@ -18,6 +20,11 @@ class ApplicationController < Sinatra::Base
   get '/signup' do
     @session = session
     erb :'users/create_user'
+  end
+
+  get '/logout' do
+    session.clear
+    redirect '/login'
   end
 
   get '/login' do
@@ -36,10 +43,9 @@ class ApplicationController < Sinatra::Base
     erb :'events/create_event'
   end
 
-  get '/logout' do
-    session.clear
+  get '/flashmessage' do
     flash[:message] = "Logged Out"
-    redirect '/login'
+    redirect to '/'
   end
 
   get '/users/:slug' do
@@ -60,10 +66,9 @@ class ApplicationController < Sinatra::Base
       user = User.find_by(id: session[:user_id])
       if user.id == event.user.id
         event.destroy
-        flash[:message] = "Event Deleted"
         redirect to "/events"
       else
-        flash[:message] = "Can't Delete Someone Else's Event"
+        flash[:message] = "Can't delete someone else's Event!"
         redirect to "/events/#{event.id}"
       end
     else
@@ -79,7 +84,7 @@ class ApplicationController < Sinatra::Base
       if @user.id == @event.user.id
         erb :'events/edit_event'
       else
-        flash[:message] = "Can't edit someone else's event"
+        flash[:message] = "Can't edit someone else's Event!"
         redirect to "/events/#{event.id}"
       end
     else
@@ -119,6 +124,7 @@ class ApplicationController < Sinatra::Base
 
   post '/signup' do
     if params[:username] == ""||params[:email] == ""||params[:password] == ""
+      flash[:message] = "Can't leave any fields blank"
       redirect to '/signup'
     else
       user = User.create(params)
@@ -136,6 +142,7 @@ class ApplicationController < Sinatra::Base
         session[:user_id] = user.id
         redirect to '/events'
       else
+        flash[:message] = "Could not find account, one or more fields incorrect"
         redirect to '/login'
       end
     end
@@ -143,6 +150,7 @@ class ApplicationController < Sinatra::Base
 
   post '/events' do
     if params[:name] == ""||params[:city] == ""||params[:state] == ""||params[:description] == ""||params[:date] == ""||params[:time] == ""
+      flash[:message] = "Can't leave any fields blank"
       redirect to '/events/new'
     else
       user = User.find_by(id: session[:user_id])
@@ -163,6 +171,7 @@ class ApplicationController < Sinatra::Base
   patch '/events/:id' do
     event = Event.find_by(id: params[:id])
     if params[:name] == ""||params[:city] == ""||params[:state] == ""||params[:description] == ""||params[:date] == ""||params[:time] == ""
+      flash[:message] = "Can't leave any fields blank"
       redirect to "/events/#{event.id}/edit"
     else
       event.update(name: params[:name], city: params[:city], state: params[:state], description: params[:description],date: params[:date],time: params[:time])

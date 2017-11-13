@@ -1,3 +1,6 @@
+<% if flash[:message] != nil || flash[:message] != ""%>
+  <h3><%= flash[:message] %></h3>
+<% end %>
 <%if Helpers.is_logged_in?(@session)%>
   <form action='/events/<%=@event.id%>' method="post">
     <input id="hidden" type="hidden" name="_method" value="patch">
