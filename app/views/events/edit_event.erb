@@ -5,7 +5,8 @@
   <form action='/events/<%=@event.id%>' method="post">
     <input id="hidden" type="hidden" name="_method" value="patch">
     <p>Event Name: <input type="text" name="name" value="<%=@event.name%>"></p>
-    <select name="state">
+    <p>City: <input type="text" name="city" value="<%=@event.city%>"> State:
+    <select name="state" value="<%=@event.state%>">
       <option value="Alabama">Alabama</option>
       <option value="Alaska">Alaska</option>
       <option value="Arizona">Arizona</option>

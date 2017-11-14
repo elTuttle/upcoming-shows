@@ -115,7 +115,7 @@ class ApplicationController < Sinatra::Base
 
     @session = session
     Event.all.each do |event|
-      if event.city_slug == params[:city] && event.state_slug == params[:state]
+      if event.city == @city && event.state == @state
         @events << event
       end
     end
