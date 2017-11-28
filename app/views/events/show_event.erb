@@ -1,13 +1,12 @@
 <% if flash[:message] != nil || flash[:message] != ""%>
   <h3><%= flash[:message] %></h3>
 <% end %>
-<%if Helpers.is_logged_in?(@session)%>
   <h2><%=@event.name%></h2>
   <h4><%=@event.city%>, <%=@event.state%></h4>
   <p><%=@event.description%></p>
   <p><%=@event.date%> <%=@event.time%></p>
   <a href="/users/<%=@event.user.slug%>"> <p><%=@event.user.username%></p></a>
-  <%if @session[:user_id] == @event.user.id%>
+  <%if current_user == @event.user%>
     <form action="/events/<%= @event.id%>/edit" method="get">
       <input id="hidden" type="hidden" name="_method" value="edit">
       <input type="submit" value="Edit Event">
@@ -19,8 +18,12 @@
     <br>
     <br>
   <%end%>
+
+  <form action="/events/<%=@event.id%>/comments" method="post">
+    <label>Add Comment:</label>
+    <input type="text" name="comment[content]">
+    <input type="submit" value="Submit Comment">
+  </form>
+
   <a href="/events">Home</a>
   <a href='/logout'>Log Out</a>
-<%else%>
-  <%redirect to '/login'%>
-<%end%>

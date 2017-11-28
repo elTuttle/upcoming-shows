@@ -1,8 +1,6 @@
-<%if Helpers.is_logged_in?(@session)%>
+
   <%currentdate = DateTime.now%>
-  <h1>Welcome, <%=@user.username%></h1>
-  <a href="/events/new">create new event</a>
-  <p>Search for nearby shows</p>
+  <h1>Welcome, <%=current_user.username%></h1>
   <form action="/events/search" method="post">
     <p>City: <input type="text" name="city"> State:
       <select name="state">
@@ -73,6 +71,3 @@
   <%end%>
   <a href="/events">Home</a>
   <a href='/logout'>Log Out</a>
-<%else%>
-  <%redirect to '/login'%>
-<%end%>
