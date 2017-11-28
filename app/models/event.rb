@@ -1,5 +1,6 @@
 class Event < ActiveRecord::Base
   belongs_to :user
+  has_many :comments
 
   def city_slug
     self.city.split.join("-").downcase

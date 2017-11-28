@@ -25,5 +25,10 @@
     <input type="submit" value="Submit Comment">
   </form>
 
+  <%@comments.each do |comment|%>
+    <p><%=comment.content%></p>
+    <a href="/users/<%=comment.user.slug%>"><p><%=comment.user.username%></p></a>
+  <%end%>
+
   <a href="/events">Home</a>
   <a href='/logout'>Log Out</a>

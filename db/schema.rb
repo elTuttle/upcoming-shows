@@ -13,6 +13,12 @@
 
 ActiveRecord::Schema.define(version: 20171109233859) do
 
+  create_table "comments", force: :cascade do |t|
+    t.text    "content"
+    t.integer "user_id"
+    t.integer "event_id"
+  end
+
   create_table "events", force: :cascade do |t|
     t.string  "name"
     t.string  "city"

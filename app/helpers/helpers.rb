@@ -1,8 +1,7 @@
 module Helpers
 
   def current_user
-    user = User.find_by(id: session_hash[:user_id])
-    user
+    @current_user ||= User.find_by(id: session[:user_id])
   end
 
   def is_logged_in?

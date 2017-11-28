@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_secure_password
   has_many :events
+  has_many :comments
 
   def slug
     self.username.split.join("-").downcase
@@ -13,5 +14,5 @@ class User < ActiveRecord::Base
       end
     end
   end
-  
+
 end

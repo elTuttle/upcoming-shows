@@ -4,7 +4,7 @@ require 'sinatra/flash'
 
 class ApplicationController < Sinatra::Base
 
-  include helpers
+  include Helpers
 
   configure do
     set :public_folder, 'public'
@@ -15,6 +15,7 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/' do
+
     if !is_logged_in?
       erb :index
     else
@@ -72,6 +73,7 @@ class ApplicationController < Sinatra::Base
   get '/events/:id' do
     if is_logged_in?
       @event = Event.find_by(id: params[:id])
+      @comments = @event.comments
       erb :'events/show_event'
     else
       redirect to '/login'
@@ -183,6 +185,13 @@ class ApplicationController < Sinatra::Base
     state = params[:state]
     state = state.split.join("-").downcase
     redirect to "/events/#{city}/#{state}"
+  end
+
+  post '/events/:event_id/comments' do
+    @event = Event.find_by(id: params[:event_id])
+    @comment = @event.comments.build(params[:comment])
+    @comment.user_id = session[:user_id]
+    redirect to "/events/#{@event.id}"
   end
 
   patch '/events/:id' do
