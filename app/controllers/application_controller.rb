@@ -73,7 +73,6 @@ class ApplicationController < Sinatra::Base
   get '/events/:id' do
     if is_logged_in?
       @event = Event.find_by(id: params[:id])
-      @comments = @event.comments
       erb :'events/show_event'
     else
       redirect to '/login'
@@ -112,33 +111,36 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/events/:city/:state' do
-    @events = []
+    if is_logged_in?
+      @events = []
 
-    city = params[:city].split("-")
-    city.each do |c|
-      if c == "-"
-        c = ""
+      city = params[:city].split("-")
+      city.each do |c|
+        if c == "-"
+          c = ""
+        end
+        c.capitalize!
       end
-      c.capitalize!
-    end
-    @city = city.join(" ")
+      @city = city.join(" ")
 
-    state = params[:state].split("-")
-    state.each do |s|
-      if s == "-"
-        s = ""
+      state = params[:state].split("-")
+      state.each do |s|
+        if s == "-"
+          s = ""
+        end
+        s.capitalize!
       end
-      s.capitalize!
-    end
-    @state = state.join(" ")
+      @state = state.join(" ")
 
-    @session = session
-    Event.all.each do |event|
-      if event.city == @city && event.state == @state
-        @events << event
+      Event.all.each do |event|
+        if event.city == @city && event.state == @state
+          @events << event
+        end
       end
+      erb :'/events/local_events'
+    else
+      redirect to '/login'
     end
-    erb :'/events/local_events'
   end
 
   post '/signup' do
@@ -188,10 +190,30 @@ class ApplicationController < Sinatra::Base
   end
 
   post '/events/:event_id/comments' do
-    @event = Event.find_by(id: params[:event_id])
-    @comment = @event.comments.build(params[:comment])
-    @comment.user_id = session[:user_id]
-    redirect to "/events/#{@event.id}"
+    if @event = Event.find_by(id: params[:event_id])
+      @comment = @event.comments.build(params[:comment])
+      @comment.user_id = session[:user_id]
+      if @comment.save
+        redirect to "/events/#{@event.id}"
+      else
+        flash[:message] = "Couldn't Save Comment"
+        redirect to "/events/#{@event.id}"
+      end
+    else
+      flash[:message] = "Couldn't Find Event"
+      redirect to "/events/#{@event.id}"
+    end
+  end
+
+  delete '/events/:event_id/comments/:id/delete' do
+    if @comment = Comment.find_by(id: params[:id])
+      @comment.destroy
+      flash[:message] = "Comment Deleted"
+      redirect to "/events/#{params[:event_id]}"
+    else
+      flash[:message] = "couldn't find comment"
+      redirect to "/events/#{params[:event_id]}"
+    end
   end
 
   patch '/events/:id' do

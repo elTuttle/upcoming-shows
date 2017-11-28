@@ -25,9 +25,16 @@
     <input type="submit" value="Submit Comment">
   </form>
 
-  <%@comments.each do |comment|%>
+  <%@event.comments.each do |comment|%>
     <p><%=comment.content%></p>
     <a href="/users/<%=comment.user.slug%>"><p><%=comment.user.username%></p></a>
+    <%if current_user == comment.user%>
+      <form action="/events/<%= @event.id%>/comments/<%=comment.id%>/delete" method="post">
+        <input id="hidden" type="hidden" name="_method" value="delete">
+        <input type="submit" value="Delete Comment">
+      </form>
+      <br>
+    <%end%>
   <%end%>
 
   <a href="/events">Home</a>
