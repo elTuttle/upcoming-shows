@@ -1,11 +1,11 @@
 <% if flash[:message] != nil || flash[:message] != ""%>
   <h3><%= flash[:message] %></h3>
 <% end %>
-<%if Helpers.is_logged_in?(@session)%>
-  <form action="/events" method="post">
-    <p>Event Name: <input type="text" name="name"></p>
-    <p>City: <input type="text" name="city"> State:
-      <select name="state">
+
+<form action="/events" method="post">
+  <p>Event Name: <input type="text" name="name"></p>
+  <p>City: <input type="text" name="city"> State:
+    <select name="state">
         <option value="Alabama">Alabama</option>
         <option value="Alaska">Alaska</option>
         <option value="Arizona">Arizona</option>
@@ -57,15 +57,12 @@
         <option value="West Virginia">West Virginia</option>
         <option value="Wisconsin">Wisconsin</option>
         <option value="Wyoming">Wyoming</option>
-      </select>
-    </p>
-    <p>Description: <input type="textarea" name="description"> </p>
-    <input type="date" name="date">
-    <input type="time" name="time">
-    <br></br>
-    <input type="submit" value="Create Event">
-    <a href="/events">Home</a>
-  </form>
-<%else%>
-  <%redirect to '/login'%>
-<%end%>
+    </select>
+  </p>
+  <p>Description: <input type="textarea" name="description"> </p>
+  <input type="date" name="date">
+  <input type="time" name="time">
+  <br></br>
+  <input type="submit" value="Create Event">
+  <a href="/events">Home</a>
+</form>

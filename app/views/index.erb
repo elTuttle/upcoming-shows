@@ -1,10 +1,6 @@
-<%if !Helpers.is_logged_in?(@session)%>
-  <h1>Login or Sign Up to see Upcoming Shows!</h1>
-  <a href="/signup">Sign Up</a>
-  <a href="/login">Log In</a>
-<%else%>
-  <%redirect to '/events'%>
-<%end%>
+<h1>Login or Sign Up to see Upcoming Shows!</h1>
+<a href="/signup">Sign Up</a>
+<a href="/login">Log In</a>
 <% if flash[:message] != nil || flash[:message] != ""%>
   <h3><%= flash[:message] %></h3>
 <% end %>

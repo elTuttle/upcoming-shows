@@ -1,13 +1,10 @@
 <% if flash[:message] != nil || flash[:message] != ""%>
   <h3><%= flash[:message] %></h3>
 <% end %>
-<%if !Helpers.is_logged_in?(@session)%>
+
   <form action="/login" method="post">
     <p>Username: <input type="text" name="username" id="username"></p>
     <p>Password: <input type="password" name="password" id="password"></p>
     <input type="submit" id="submit" value="Log In">
   </form>
   <a href="/events">Home</a>
-<%else%>
-  <%redirect to '/events'%>
-<%end%>
