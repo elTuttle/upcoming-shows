@@ -15,13 +15,19 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/' do
-    @session = session
-    erb :index
+    if !is_logged_in?
+      erb :index
+    else
+      redirect to '/events'
+    end
   end
 
   get '/signup' do
-    @session = session
-    erb :'users/create_user'
+    if !is_logged_in?
+      erb :'users/create_user'
+    else
+      redirect to '/events'
+    end
   end
 
   get '/logout' do
@@ -30,36 +36,46 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/login' do
-    @session = session
-    erb :'users/login'
+    if !is_logged_in?
+      erb :'users/login'
+    else
+      redirect to '/events'
+    end
   end
 
   get '/events' do
-    @user = User.find_by(id: session[:user_id])
-    @session = session
-    erb :'events/events'
+    if is_logged_in?
+      @user = User.find_by(id: session[:user_id])
+      erb :'events/events'
+    else
+      redirect to '/login'
+    end
   end
 
   get '/events/new' do
-    @session = session
-    erb :'events/create_event'
-  end
-
-  get '/flashmessage' do
-    flash[:message] = "Logged Out"
-    redirect to '/'
+    if is_logged_in?
+      erb :'events/create_event'
+    else
+      redirect to '/login'
+    end
   end
 
   get '/users/:slug' do
-    @user = User.find_by_slug(params[:slug])
-    @session = session
-    erb :'users/show'
+    if is_logged_in?
+      @user = User.find_by_slug(params[:slug])
+      erb :'users/show'
+    else
+      redirect to '/login'
+    end
   end
 
   get '/events/:id' do
-    @event = Event.find_by(id: params[:id])
-    @session = session
-    erb :'events/show_event'
+    if is_logged_in?
+      @event = Event.find_by(id: params[:id])
+      erb :'events/show_event'
+    else
+      redirect to '/login'
+    end
   end
 
   delete '/events/:id/delete' do
@@ -82,8 +98,7 @@ class ApplicationController < Sinatra::Base
     if session[:user_id] != nil
       @event = Event.find_by(id: params[:id])
       @user = User.find_by(id: session[:user_id])
-      @session = session
-      if @user.id == @event.user.id
+      if current_user.id == @event.user.id
         erb :'events/edit_event'
       else
         flash[:message] = "Can't edit someone else's Event!"
